@@ -1,0 +1,94 @@
+.special-day-container {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 1001;
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #333;
+  padding: 10px;
+  border-radius: 8px;
+  font-family: sans-serif;
+  text-align: left;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  width: 200px;
+  border: 1px solid #ddd;
+}
+
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+}
+
+.day-number {
+  font-size: 3rem;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.month-year {
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: right;
+}
+
+.week-info {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.special-day-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.special-day-item {
+  margin-bottom: 5px;
+}
+
+.item-label {
+  font-size: 0.6rem;
+  font-style: italic;
+  color: #555;
+  margin-bottom: 0px;
+}
+
+.item-value {
+  font-size: 0.8rem;
+}
+
+.lunar-phase {
+    text-align: center;
+    margin-top: 8px;
+}
+
+.birthday .item-value {
+    color: red;
+    font-weight: bold;
+}
+
+.friday-reminder {
+  margin-top: 10px;
+  padding: 8px;
+  background-color: #fff3cd;
+  border: 1px solid #ffeeba;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  text-align: center;
+  color: #856404;
+}
+
+.last-day-reminder {
+  margin-top: 10px;
+  padding: 8px;
+  background-color: #d1ecf1;
+  border: 1px solid #bee5eb;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  text-align: center;
+  color: #0c5460;
+}

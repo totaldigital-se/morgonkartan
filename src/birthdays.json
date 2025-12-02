@@ -1,0 +1,28 @@
+{
+  "holidays": [
+    {
+      "date": "01-01",
+      "name": "New Year's Day"
+    },
+    {
+      "date": "06-06",
+      "name": "National Day of Sweden"
+    },
+    {
+      "date": "12-24",
+      "name": "Christmas Eve"
+    },
+    {
+      "date": "12-25",
+      "name": "Christmas Day"
+    },
+    {
+      "date": "11-30",
+      "name": "Grattis på födelsedagen, Johan"
+    },
+    {
+      "date": "12-01",
+      "name": "Grattis på födelsedagen, Johan"
+    }
+  ]
+}

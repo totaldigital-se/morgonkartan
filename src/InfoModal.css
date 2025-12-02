@@ -1,0 +1,113 @@
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.modal-content {
+  background: linear-gradient(145deg, #333, #222);
+  padding: 40px;
+  border-radius: 15px;
+  width: 90%;
+  max-width: 800px;
+  max-height: 85vh;
+  overflow-y: auto;
+  position: relative;
+  color: #e0e0e0;
+  border: 1px solid #555;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+  animation: slideIn 0.4s ease-out;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Custom Scrollbar */
+.modal-content::-webkit-scrollbar {
+  width: 12px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+  background: #2c2c2c;
+  border-radius: 10px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+  background-color: #ff4b00;
+  border-radius: 10px;
+  border: 3px solid #2c2c2c;
+}
+
+.close-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: transparent;
+  border: none;
+  font-size: 2.5rem;
+  color: #aaa;
+  cursor: pointer;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.close-button:hover {
+  color: #ff4b00;
+  transform: rotate(90deg);
+}
+
+.modal-content h2 {
+  font-size: 2rem;
+  color: #ff4b00;
+  border-bottom: 2px solid #ff4b00;
+  padding-bottom: 15px;
+  margin-top: 0;
+  margin-bottom: 25px;
+  font-weight: 600;
+}
+
+.modal-content ul, .modal-content ol {
+  padding-left: 25px;
+}
+
+.modal-content li {
+  margin-bottom: 15px;
+  line-height: 1.7;
+}
+
+.modal-content p {
+  line-height: 1.8;
+  margin-bottom: 20px;
+  font-size: 1.1rem;
+}
+
+.modal-content strong {
+  color: #ff8c00; /* Lighter orange for emphasis */
+  font-weight: 600;
+}
+
+.modal-content ol li ul {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding-left: 20px;
+}
+
+.modal-content ol li ul li {
+  list-style-type: circle;
+}

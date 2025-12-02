@@ -1,0 +1,45 @@
+
+.map-container-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  padding: 20px;
+}
+
+.map-fixed-width-container {
+  width: 50%;
+  max-width: 1200px;
+  height: 80vh;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 2px solid white;
+}
+
+.leaflet-container {
+  background-color: transparent;
+}
+
+.weather-icon-img {
+  filter: sepia(100%) saturate(300%) brightness(70%) hue-rotate(180deg);
+  transition: transform 0.2s ease-in-out;
+}
+
+.weather-icon-img:hover {
+  transform: scale(1.1);
+}
+
+.transparent-tooltip {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  color: white;
+  font-weight: bold;
+  font-size: 1.2rem;
+  text-shadow: 
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000;
+}

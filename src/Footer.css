@@ -1,0 +1,32 @@
+
+.site-footer {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1000;
+}
+
+.site-footer div {
+  display: flex;
+  gap: 15px;
+}
+
+.site-footer a, .info-button {
+  color: white;
+  transition: color 0.2s;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.site-footer a:hover, .info-button:hover {
+  color: #0e76a8;
+}
+
+.info-button {
+  margin-right: 20px;
+}
