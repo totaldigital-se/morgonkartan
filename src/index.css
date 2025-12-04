@@ -1,4 +1,3 @@
-
 html,
 body,
 #root {
@@ -10,7 +9,7 @@ body,
 }
 
 body {
-  background: url('/planet-3403606_1920.jpg') no-repeat center center fixed;
+  background: url('/background-1794077_1920.jpg') no-repeat center center fixed;
   background-size: cover;
   overflow: hidden;
 }

@@ -18,7 +18,7 @@ const cities = [
   { name: 'Linköping', lat: 58.4108, lon: 15.6214, webcamurl: 'https://www.vackertvader.se/webbkamera/link%C3%B6ping' },
   { name: 'Örebro', lat: 59.2753, lon: 15.2134, webcamurl: 'https://www.vadernu.com/europe/sweden/orebro/webcam' },
   { name: 'Lidköping', lat: 58.5051, lon: 13.1558, webcamurl: 'https://www.vadernu.com/europe/sweden/vastra-gotaland/lidkopings-kommun/lidkoping/webcam' },
-  { name: 'Kumla', lat: 59.1275, lon: 15.1432, webcamurl: 'https://www.vadernu.com/europe/sweden/orebro/kumla-kommun/webcam' },
+  { name: 'Kumla', lat: 59.1275, lon: 15.1432, webcamurl: 'https://www.vackertvader.se/webbkamera/kumla' },
   { name: 'Alingsås', lat: 57.9296, lon: 12.5323, webcamurl: 'https://www.vackertvader.se/webbkamera/g%C3%B6tarondellen-2' },
   { name: 'Båstad', lat: 56.4319, lon: 12.8305, webcamurl: 'https://www.vadernu.com/europe/sweden/skane/bastads-kommun/bastad/webcam' },
   { name: 'Katrineholm', lat: 59.0031, lon: 16.2055, webcamurl: 'https://www.weatherbug.com/traffic-cam/katrineholm-sodermanlands-sw' },
