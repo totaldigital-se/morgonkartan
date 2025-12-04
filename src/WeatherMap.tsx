@@ -11,20 +11,20 @@ import type { WeatherData } from './types';
 const API_KEY = '68d40ed6fc7e43c228f3488a57a10df9'; // Replace with your OpenWeatherMap API key
 
 const cities = [
-  { name: 'Stockholm', lat: 59.3293, lon: 18.0686 },
-  { name: 'Gothenburg', lat: 57.7089, lon: 11.9746 },
-  { name: 'Uppsala', lat: 59.8586, lon: 17.6389 },
-  { name: 'Östersund', lat: 63.1767, lon: 14.6361 },
-  { name: 'Linköping', lat: 58.4108, lon: 15.6214 },
-  { name: 'Örebro', lat: 59.2753, lon: 15.2134 },
-  { name: 'Lidköping', lat: 58.5051, lon: 13.1558 },
-  { name: 'Kumla', lat: 59.1275, lon: 15.1432 },
-  { name: 'Alingsås', lat: 57.9296, lon: 12.5323 },
-  { name: 'Båstad', lat: 56.4319, lon: 12.8305 },
-  { name: 'Katrineholm', lat: 59.0031, lon: 16.2055 },
-  { name: 'Degerfors', lat: 59.2373, lon: 14.4307 },
-  { name: 'Varberg', lat: 57.1056, lon: 12.2536 },
-  { name: 'Mariehamn', lat: 60.0972, lon: 19.9454 },
+  { name: 'Stockholm', lat: 59.3293, lon: 18.0686, webcamurl: 'https://webcamcollections.com/countries/sweden/stockholm/flottsbro' },
+  { name: 'Gothenburg', lat: 57.7089, lon: 11.9746, webcamurl: 'https://www.vadernu.com/europe/sweden/vastra-gotaland/goteborgs-stad/goteborg/webcam' },
+  { name: 'Uppsala', lat: 59.8586, lon: 17.6389, webcamurl: 'https://www.vadernu.com/europe/sweden/uppsala/webcam' },
+  { name: 'Östersund', lat: 63.1767, lon: 14.6361, webcamurl: 'https://www.vadernu.com/europe/sweden/jamtland/ostersunds-kommun/ostersund/webcam' },
+  { name: 'Linköping', lat: 58.4108, lon: 15.6214, webcamurl: 'https://www.vackertvader.se/webbkamera/link%C3%B6ping' },
+  { name: 'Örebro', lat: 59.2753, lon: 15.2134, webcamurl: 'https://www.vadernu.com/europe/sweden/orebro/webcam' },
+  { name: 'Lidköping', lat: 58.5051, lon: 13.1558, webcamurl: 'https://www.vadernu.com/europe/sweden/vastra-gotaland/lidkopings-kommun/lidkoping/webcam' },
+  { name: 'Kumla', lat: 59.1275, lon: 15.1432, webcamurl: 'https://www.vadernu.com/europe/sweden/orebro/kumla-kommun/webcam' },
+  { name: 'Alingsås', lat: 57.9296, lon: 12.5323, webcamurl: 'https://www.vackertvader.se/webbkamera/g%C3%B6tarondellen-2' },
+  { name: 'Båstad', lat: 56.4319, lon: 12.8305, webcamurl: 'https://www.vadernu.com/europe/sweden/skane/bastads-kommun/bastad/webcam' },
+  { name: 'Katrineholm', lat: 59.0031, lon: 16.2055, webcamurl: 'https://www.weatherbug.com/traffic-cam/katrineholm-sodermanlands-sw' },
+  { name: 'Degerfors', lat: 59.2373, lon: 14.4307, webcamurl: 'http://www.insecam.org/en/bycity/Degerfors/' },
+  { name: 'Varberg', lat: 57.1056, lon: 12.2536, webcamurl: 'https://www.vadernu.com/europe/sweden/halland/varbergs-kommun/varberg/webcam' },
+  { name: 'Mariehamn', lat: 60.0972, lon: 19.9454, webcamurl: 'https://www.vadernu.com/europe/aland-islands/mariehamns-stad/mariehamn/webcam' },
 ];
 
 // Sort cities from south to north to create a more logical path for the polyline
@@ -119,6 +119,7 @@ const WeatherMap = ({ refreshKey, onDataLoaded }: WeatherMapProps) => {
                     <p>Temperature: {data.main.temp}°C</p>
                     <p>Humidity: {data.main.humidity}%</p>
                     <p>Weather: {data.weather[0].description}</p>
+                    {cities[index].webcamurl && <a href={cities[index].webcamurl} target="_blank" rel="noopener noreferrer">View Webcam</a>}
                   </div>
                 </Popup>
                 <Tooltip className="transparent-tooltip" direction="top" offset={[0, 0]} opacity={1} permanent>
