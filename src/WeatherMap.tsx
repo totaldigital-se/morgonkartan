@@ -8,6 +8,7 @@ import SpecialDay from './SpecialDay';
 import './WeatherMap.css';
 import type { WeatherData } from './types';
 import { FaSpotify } from 'react-icons/fa';
+import Windy from './Windy';
 
 const API_KEY = '68d40ed6fc7e43c228f3488a57a10df9'; // Replace with your OpenWeatherMap API key
 
@@ -153,13 +154,14 @@ const WeatherMap = ({ refreshKey, onDataLoaded }: WeatherMapProps) => {
             url={tileLayers[activeTileLayer].url}
             attribution={tileLayers[activeTileLayer].attribution}
           />
-          {activeWeatherOverlay !== 'none' && (
+          {activeWeatherOverlay !== 'none' && activeWeatherOverlay !== 'windy' && (
             <TileLayer
               key={activeWeatherOverlay}
               url={weatherOverlays[activeWeatherOverlay].url}
               attribution={weatherOverlays[activeWeatherOverlay].attribution}
             />
           )}
+          {activeWeatherOverlay === 'windy' && <Windy />}
           <SpecialDay />
           {weatherData.length > 0 && weatherData.map((data, index) => {
             const isBestWeather = data.name === bestWeatherCity;
@@ -209,6 +211,7 @@ const WeatherMap = ({ refreshKey, onDataLoaded }: WeatherMapProps) => {
             <option value="temperature">Temperature</option>
             <option value="wind">Wind</option>
             <option value="clouds">Clouds</option>
+            <option value="windy">Windy</option>
           </select>
         </div>
         <button className="spotify-button" onClick={() => setShowSpotify(!showSpotify)}>
