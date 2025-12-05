@@ -39,6 +39,25 @@ const tileLayers: { [key: string]: TileLayerData } = {
   },
 };
 
+const weatherOverlays: { [key: string]: TileLayerData } = {
+  rain: {
+    url: `https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=${API_KEY}`,
+    attribution: '&copy; OpenWeatherMap',
+  },
+  temperature: {
+    url: `https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=${API_KEY}`,
+    attribution: '&copy; OpenWeatherMap',
+  },
+  wind: {
+    url: `https://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=${API_KEY}`,
+    attribution: '&copy; OpenWeatherMap',
+  },
+  clouds: {
+    url: `https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=${API_KEY}`,
+    attribution: '&copy; OpenWeatherMap',
+  },
+};
+
 
 const cities = [
   { name: 'Stockholm', lat: 59.3293, lon: 18.0686, webcamurl: 'https://webcamcollections.com/countries/sweden/stockholm/flottsbro' },
@@ -71,6 +90,7 @@ const WeatherMap = ({ refreshKey, onDataLoaded }: WeatherMapProps) => {
   const [bestWeatherCityCoordinates, setBestWeatherCityCoordinates] = useState<L.LatLng | null>(null);
   const [snowingCities, setSnowingCities] = useState<L.LatLng[]>([]);
   const [activeTileLayer, setActiveTileLayer] = useState('dark');
+  const [activeWeatherOverlay, setActiveWeatherOverlay] = useState('rain');
   const [showSpotify, setShowSpotify] = useState(false);
 
   const fetchWeatherData = useCallback(async () => {
@@ -133,6 +153,13 @@ const WeatherMap = ({ refreshKey, onDataLoaded }: WeatherMapProps) => {
             url={tileLayers[activeTileLayer].url}
             attribution={tileLayers[activeTileLayer].attribution}
           />
+          {activeWeatherOverlay !== 'none' && (
+            <TileLayer
+              key={activeWeatherOverlay}
+              url={weatherOverlays[activeWeatherOverlay].url}
+              attribution={weatherOverlays[activeWeatherOverlay].attribution}
+            />
+          )}
           <SpecialDay />
           {weatherData.length > 0 && weatherData.map((data, index) => {
             const isBestWeather = data.name === bestWeatherCity;
@@ -176,6 +203,12 @@ const WeatherMap = ({ refreshKey, onDataLoaded }: WeatherMapProps) => {
             <option value="satellite">Satellite</option>
             <option value="geoportail">Geoportail France</option>
             <option value="geoportailorto">Geoportail France orto</option>
+          </select>
+          <select value={activeWeatherOverlay} onChange={e => setActiveWeatherOverlay(e.target.value)}>
+            <option value="rain">Rain</option>
+            <option value="temperature">Temperature</option>
+            <option value="wind">Wind</option>
+            <option value="clouds">Clouds</option>
           </select>
         </div>
         <button className="spotify-button" onClick={() => setShowSpotify(!showSpotify)}>
