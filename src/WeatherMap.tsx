@@ -7,8 +7,38 @@ import Routing from './Routing';
 import SpecialDay from './SpecialDay';
 import './WeatherMap.css';
 import type { WeatherData } from './types';
+import { FaSpotify } from 'react-icons/fa';
 
 const API_KEY = '68d40ed6fc7e43c228f3488a57a10df9'; // Replace with your OpenWeatherMap API key
+
+interface TileLayerData {
+  url: string;
+  attribution: string;
+}
+
+const tileLayers: { [key: string]: TileLayerData } = {
+  dark: {
+    url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+  },
+  light: {
+    url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+  },
+  satellite: {
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+  },
+  geoportail: {
+    url: 'https://data.geopf.fr/wmts?REQUEST=GetTile&SERVICE=WMTS&VERSION=1.0.0&STYLE=normal&FORMAT=image/png&TILEMATRIXSET=PM&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}',
+    attribution: '<a target="_blank" href="https://www.geoportail.gouv.fr/">Geoportail France</a>',
+  },
+  geoportailorto: {
+    url: 'https://data.geopf.fr/wmts?REQUEST=GetTile&SERVICE=WMTS&VERSION=1.0.0&STYLE=normal&FORMAT=image/jpeg&TILEMATRIXSET=PM&LAYER=ORTHOIMAGERY.ORTHOPHOTOS&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}',
+    attribution: '<a target="_blank" href="https://www.geoportail.gouv.fr/">Geoportail France</a>',
+  },
+};
+
 
 const cities = [
   { name: 'Stockholm', lat: 59.3293, lon: 18.0686, webcamurl: 'https://webcamcollections.com/countries/sweden/stockholm/flottsbro' },
@@ -40,6 +70,8 @@ const WeatherMap = ({ refreshKey, onDataLoaded }: WeatherMapProps) => {
   const [bestWeatherCity, setBestWeatherCity] = useState<string | null>(null);
   const [bestWeatherCityCoordinates, setBestWeatherCityCoordinates] = useState<L.LatLng | null>(null);
   const [snowingCities, setSnowingCities] = useState<L.LatLng[]>([]);
+  const [activeTileLayer, setActiveTileLayer] = useState('dark');
+  const [showSpotify, setShowSpotify] = useState(false);
 
   const fetchWeatherData = useCallback(async () => {
     const data = await Promise.all(
@@ -97,8 +129,9 @@ const WeatherMap = ({ refreshKey, onDataLoaded }: WeatherMapProps) => {
           zoomControl={false}
         >
           <TileLayer
-            url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+            key={activeTileLayer}
+            url={tileLayers[activeTileLayer].url}
+            attribution={tileLayers[activeTileLayer].attribution}
           />
           <SpecialDay />
           {weatherData.length > 0 && weatherData.map((data, index) => {
@@ -113,7 +146,7 @@ const WeatherMap = ({ refreshKey, onDataLoaded }: WeatherMapProps) => {
 
             return (
               <Marker key={index} position={[cities[index].lat, cities[index].lon]} icon={weatherIcon}>
-                <Popup>
+                <Popup className="custom-popup">
                   <div>
                     <h2>{data.name}</h2>
                     <p>Temperature: {data.main.temp}°C</p>
@@ -136,6 +169,41 @@ const WeatherMap = ({ refreshKey, onDataLoaded }: WeatherMapProps) => {
             <Circle key={index} center={city} radius={50000} color="#add8e6" />
           ))}
         </MapContainer>
+        <div className="layer-control">
+          <select value={activeTileLayer} onChange={e => setActiveTileLayer(e.target.value)}>
+            <option value="dark">Dark</option>
+            <option value="light">Light</option>
+            <option value="satellite">Satellite</option>
+            <option value="geoportail">Geoportail France</option>
+            <option value="geoportailorto">Geoportail France orto</option>
+          </select>
+        </div>
+        <button className="spotify-button" onClick={() => setShowSpotify(!showSpotify)}>
+          <FaSpotify />
+        </button>
+        {showSpotify && (
+          <div className="spotify-container">
+            <iframe
+              className="spotify-iframe"
+              src="https://open.spotify.com/embed/playlist/74uiwlvKO6lelIaVMWQtZh"
+              width="300"
+              height="500"
+              frameBorder="0"
+              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+              loading="lazy"
+            >
+            </iframe>
+            <iframe
+              className="spotify-iframe"
+              src="https://open.spotify.com/embed/track/61cqXqShPblBQWWMwKIoIs"
+              width="300"
+              height="100"
+              frameBorder="0"
+              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+            >
+            </iframe>
+          </div>
+        )}
       </div>
     </div>
   );
