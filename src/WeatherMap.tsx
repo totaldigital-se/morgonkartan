@@ -1,20 +1,32 @@
-import { MapContainer, TileLayer, Marker, Popup, Tooltip, Circle } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, Tooltip, Circle, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import L from 'leaflet';
+import Modal from 'react-modal';
 import Routing from './Routing';
 import SpecialDay from './SpecialDay';
 import './WeatherMap.css';
 import type { WeatherData } from './types';
 import { FaSpotify } from 'react-icons/fa';
-import Windy from './Windy';
+import Clock from './Clock';
+import HistoricalWeather from './HistoricalWeather';
+import SpotifyPlaylists from './SpotifyPlaylists';
 
 const API_KEY = '68d40ed6fc7e43c228f3488a57a10df9'; // Replace with your OpenWeatherMap API key
+const CACHE_EXPIRATION = 10 * 60 * 1000; // 10 minutes
+
+Modal.setAppElement('#root');
 
 interface TileLayerData {
   url: string;
   attribution: string;
+}
+
+interface WeatherOverlay {
+  url?: string;
+  attribution?: string;
+  component?: React.FC<{ map: L.Map }>;
 }
 
 const tileLayers: { [key: string]: TileLayerData } = {
@@ -40,7 +52,7 @@ const tileLayers: { [key: string]: TileLayerData } = {
   },
 };
 
-const weatherOverlays: { [key: string]: TileLayerData } = {
+const weatherOverlays: { [key: string]: WeatherOverlay } = {
   rain: {
     url: `https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=${API_KEY}`,
     attribution: '&copy; OpenWeatherMap',
@@ -49,16 +61,35 @@ const weatherOverlays: { [key: string]: TileLayerData } = {
     url: `https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=${API_KEY}`,
     attribution: '&copy; OpenWeatherMap',
   },
-  wind: {
-    url: `https://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=${API_KEY}`,
-    attribution: '&copy; OpenWeatherMap',
-  },
   clouds: {
     url: `https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=${API_KEY}`,
     attribution: '&copy; OpenWeatherMap',
   },
 };
 
+const OverlayRenderer = ({ activeWeatherOverlays }: { activeWeatherOverlays: string[] }) => {
+  const map = useMap();
+  
+  return (
+    <>
+      {activeWeatherOverlays.map(overlay => {
+        const activeOverlay = weatherOverlays[overlay];
+        if (!activeOverlay) return null;
+
+        if (activeOverlay.url) {
+          return <TileLayer key={overlay} url={activeOverlay.url} attribution={activeOverlay.attribution} />;
+        }
+
+        if (activeOverlay.component) {
+          const OverlayComponent = activeOverlay.component;
+          return <OverlayComponent key={overlay} map={map} />;
+        }
+
+        return null;
+      })}
+    </>
+  );
+};
 
 const cities = [
   { name: 'Stockholm', lat: 59.3293, lon: 18.0686, webcamurl: 'https://webcamcollections.com/countries/sweden/stockholm/flottsbro' },
@@ -91,10 +122,37 @@ const WeatherMap = ({ refreshKey, onDataLoaded }: WeatherMapProps) => {
   const [bestWeatherCityCoordinates, setBestWeatherCityCoordinates] = useState<L.LatLng | null>(null);
   const [snowingCities, setSnowingCities] = useState<L.LatLng[]>([]);
   const [activeTileLayer, setActiveTileLayer] = useState('dark');
-  const [activeWeatherOverlay, setActiveWeatherOverlay] = useState('rain');
+  const [activeWeatherOverlay, setActiveWeatherOverlay] = useState<string>('rain');
   const [showSpotify, setShowSpotify] = useState(false);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [selectedCity, setSelectedCity] = useState<{lat: number, lon: number, name: string} | null>(null);
+
+  const handleMarkerClick = (city: {lat: number, lon: number, name: string}) => {
+    setSelectedCity(city);
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+    setSelectedCity(null);
+  };
+
+  const handleWeatherOverlayChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setActiveWeatherOverlay(e.target.value);
+  };
 
   const fetchWeatherData = useCallback(async () => {
+    const cachedData = localStorage.getItem('weatherData');
+    const cachedTimestamp = localStorage.getItem('weatherDataTimestamp');
+
+    if (cachedData && cachedTimestamp && (Date.now() - parseInt(cachedTimestamp)) < CACHE_EXPIRATION) {
+      const data = JSON.parse(cachedData);
+      setWeatherData(data);
+      onDataLoaded();
+      processWeatherData(data);
+      return;
+    }
+
     const data = await Promise.all(
       cities.map(async (city) => {
         const response = await axios.get(
@@ -103,9 +161,15 @@ const WeatherMap = ({ refreshKey, onDataLoaded }: WeatherMapProps) => {
         return response.data;
       })
     );
+    
+    localStorage.setItem('weatherData', JSON.stringify(data));
+    localStorage.setItem('weatherDataTimestamp', Date.now().toString());
     setWeatherData(data);
     onDataLoaded();
+    processWeatherData(data);
+  }, [onDataLoaded]);
 
+  const processWeatherData = (data: WeatherData[]) => {
     // Determine best weather
     let bestWeather = data[0];
     for (let i = 1; i < data.length; i++) {
@@ -124,7 +188,7 @@ const WeatherMap = ({ refreshKey, onDataLoaded }: WeatherMapProps) => {
       }
     }
     setSnowingCities(snowing);
-  }, [onDataLoaded]);
+  };
 
   useEffect(() => {
     fetchWeatherData();
@@ -154,14 +218,7 @@ const WeatherMap = ({ refreshKey, onDataLoaded }: WeatherMapProps) => {
             url={tileLayers[activeTileLayer].url}
             attribution={tileLayers[activeTileLayer].attribution}
           />
-          {activeWeatherOverlay !== 'none' && activeWeatherOverlay !== 'windy' && (
-            <TileLayer
-              key={activeWeatherOverlay}
-              url={weatherOverlays[activeWeatherOverlay].url}
-              attribution={weatherOverlays[activeWeatherOverlay].attribution}
-            />
-          )}
-          {activeWeatherOverlay === 'windy' && <Windy />}
+          <OverlayRenderer activeWeatherOverlays={activeWeatherOverlay !== 'none' ? [activeWeatherOverlay] : []} />
           <SpecialDay />
           {weatherData.length > 0 && weatherData.map((data, index) => {
             const isBestWeather = data.name === bestWeatherCity;
@@ -174,7 +231,14 @@ const WeatherMap = ({ refreshKey, onDataLoaded }: WeatherMapProps) => {
             });
 
             return (
-              <Marker key={index} position={[cities[index].lat, cities[index].lon]} icon={weatherIcon}>
+              <Marker 
+                key={index} 
+                position={[cities[index].lat, cities[index].lon]} 
+                icon={weatherIcon}
+                eventHandlers={{
+                  click: () => handleMarkerClick({lat: cities[index].lat, lon: cities[index].lon, name: data.name}),
+                }}
+              >
                 <Popup className="custom-popup">
                   <div>
                     <h2>{data.name}</h2>
@@ -198,6 +262,7 @@ const WeatherMap = ({ refreshKey, onDataLoaded }: WeatherMapProps) => {
             <Circle key={index} center={city} radius={50000} color="#add8e6" />
           ))}
         </MapContainer>
+        <Clock />
         <div className="layer-control">
           <select value={activeTileLayer} onChange={e => setActiveTileLayer(e.target.value)}>
             <option value="dark">Dark</option>
@@ -206,39 +271,27 @@ const WeatherMap = ({ refreshKey, onDataLoaded }: WeatherMapProps) => {
             <option value="geoportail">Geoportail France</option>
             <option value="geoportailorto">Geoportail France orto</option>
           </select>
-          <select value={activeWeatherOverlay} onChange={e => setActiveWeatherOverlay(e.target.value)}>
-            <option value="rain">Rain</option>
-            <option value="temperature">Temperature</option>
-            <option value="wind">Wind</option>
-            <option value="clouds">Clouds</option>
-            <option value="windy">Windy</option>
+          <select value={activeWeatherOverlay} onChange={handleWeatherOverlayChange}>
+            <option value="none">None</option>
+            {Object.keys(weatherOverlays).map(key => (
+              <option key={key} value={key}>
+                {key.charAt(0).toUpperCase() + key.slice(1)}
+              </option>
+            ))}
           </select>
         </div>
         <button className="spotify-button" onClick={() => setShowSpotify(!showSpotify)}>
           <FaSpotify />
         </button>
-        {showSpotify && (
-          <div className="spotify-container">
-            <iframe
-              className="spotify-iframe"
-              src="https://open.spotify.com/embed/playlist/74uiwlvKO6lelIaVMWQtZh"
-              width="300"
-              height="500"
-              frameBorder="0"
-              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-              loading="lazy"
-            >
-            </iframe>
-            <iframe
-              className="spotify-iframe"
-              src="https://open.spotify.com/embed/track/61cqXqShPblBQWWMwKIoIs"
-              width="300"
-              height="100"
-              frameBorder="0"
-              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-            >
-            </iframe>
-          </div>
+        {showSpotify && <SpotifyPlaylists />}
+        {selectedCity && (
+          <HistoricalWeather
+            lat={selectedCity.lat}
+            lon={selectedCity.lon}
+            cityName={selectedCity.name}
+            isOpen={modalIsOpen}
+            onRequestClose={closeModal}
+          />
         )}
       </div>
     </div>

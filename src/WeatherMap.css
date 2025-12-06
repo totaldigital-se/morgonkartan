@@ -1,109 +1,94 @@
 .map-container-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    width: 100%;
-    padding: 20px;
-  }
-  
-  .map-fixed-width-container {
-    position: relative;
-    width: 80%; /* Increased width */
-    height: 80vh;
-    max-width: 1600px; /* Increased max-width */
-    border-radius:10px;
-    overflow: hidden;
-    border: 2px solid white;
-  }
-  
-  .weather-icon-img {
-    border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent white background */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Add a subtle shadow */
-    transition: transform 0.2s ease-in-out; /* Smooth transform on hover */
-  }
-  
-  .weather-icon-img:hover {
-    transform: scale(1.1); /* Slightly enlarge the icon on hover */
-  }
-  
-  /* Custom popup style */
-  .custom-popup .leaflet-popup-content-wrapper {
-    background-color: #333;
-    color: #fff;
-    border-radius: 10px;
-    border: 2px solid #555;
-    box-shadow: 0 3px 14px rgba(0,0,0,0.4);
-  }
-  
-  .custom-popup .leaflet-popup-content {
-    margin: 13px 19px;
-    line-height: 1.4;
-  }
-  
-  .custom-popup .leaflet-popup-tip-container {
-    visibility: hidden;
-  }
-  
-  /* Tooltip style */
-  .transparent-tooltip {
-    background-color: transparent;
-    border: none;
-    box-shadow: none;
-    color: white;
-    font-weight: bold;
-    font-size: 1.2em;
-    text-shadow: 1px 1px 2px black, 0 0 1em blue, 0 0 0.2em blue;
-  }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  padding: 20px;
+}
 
-  .layer-control {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .layer-control select {
-    background-color: #333;
-    color: #fff;
-    border: 1px solid #555;
-    border-radius: 5px;
-    padding: 5px;
-    margin-bottom: 5px;
-  }
+.map-fixed-width-container {
+  position: relative;
+  width: 80%; /* Increased width */
+  height: 80vh;
+  max-width: 1600px; /* Increased max-width */
+  border-radius:10px;
+  overflow: hidden;
+  border: 2px solid white;
+}
 
-  .spotify-container {
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-  }
+.weather-icon-img {
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent white background */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Add a subtle shadow */
+  transition: transform 0.2s ease-in-out; /* Smooth transform on hover */
+}
 
-  .spotify-iframe {
-    border-radius: 10px;
-    margin-top: 10px;
-  }
+.weather-icon-img:hover {
+  transform: scale(1.1); /* Slightly enlarge the icon on hover */
+}
 
-  .spotify-button {
-    position: absolute;
-    bottom: 10px;
-    left: 10px;
-    z-index: 1000;
-    background-color: #1DB954;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    font-size: 20px;
-  }
-  
+/* Custom popup style */
+.custom-popup .leaflet-popup-content-wrapper {
+  background-color: #333;
+  color: #fff;
+  border-radius: 10px;
+  border: 2px solid #555;
+  box-shadow: 0 3px 14px rgba(0,0,0,0.4);
+}
+
+.custom-popup .leaflet-popup-content {
+  margin: 13px 19px;
+  line-height: 1.4;
+}
+
+.custom-popup .leaflet-popup-tip-container {
+  visibility: hidden;
+}
+
+/* Tooltip style */
+.transparent-tooltip {
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+  color: white;
+  font-weight: bold;
+  font-size: 1.2em;
+  text-shadow: 1px 1px 2px black, 0 0 1em blue, 0 0 0.2em blue;
+}
+
+.layer-control {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1001; /* Ensure controls are above map */
+  display: flex;
+  flex-direction: column;
+}
+
+.layer-control select {
+  background-color: #333;
+  color: #fff;
+  border: 1px solid #555;
+  border-radius: 5px;
+  padding: 5px;
+  margin-bottom: 5px;
+}
+
+.spotify-button {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  z-index: 1001; /* Ensure button is above map */
+  background-color: #1DB954;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-size: 20px;
+}

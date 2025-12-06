@@ -1,0 +1,55 @@
+.clock-container {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  width: 80px;
+  height: 80px;
+  z-index: 1000;
+  filter: drop-shadow(0px 5px 5px rgba(0, 0, 0, 0.4));
+}
+
+.analog-clock {
+  width: 100%;
+  height: 100%;
+}
+
+.clock-face {
+  fill: rgba(255, 255, 255, 0.95);
+  stroke: #444;
+  stroke-width: 2;
+  filter: drop-shadow(0px 3px 3px rgba(0, 0, 0, 0.3));
+}
+
+.clock-number {
+  font-size: 8px;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  fill: #333;
+  font-family: 'Arial', sans-serif;
+  font-weight: bold;
+}
+
+.hour-hand {
+  stroke: #333;
+  stroke-width: 3;
+  stroke-linecap: round;
+  filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 0.5));
+}
+
+.minute-hand {
+  stroke: #555;
+  stroke-width: 2;
+  stroke-linecap: round;
+  filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 0.5));
+}
+
+.second-hand {
+  stroke: #ff4b00;
+  stroke-width: 1;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  filter: drop-shadow(0px 0px 3px #ff4b00);
+}
+
+.center-dot {
+  fill: #333;
+}
