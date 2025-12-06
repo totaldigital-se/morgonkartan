@@ -13,7 +13,7 @@ const Windy: React.FC = () => {
   useEffect(() => {
     const options = {
       // Required: API key
-      key: 'a5489zQmHcCEvPtE5NZ7WPnVN5WDGjMg', 
+      key: 'UnahfwPbRhACQaDEPhztZ8JuQgfa0EUC', 
 
       // Put additional console output
       verbose: true,
