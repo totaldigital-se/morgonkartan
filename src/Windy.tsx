@@ -1,61 +1,45 @@
+import React, { useEffect } from 'react';
+import './Windy.css';
 
-import { useEffect } from 'react';
-import { useMap } from 'react-leaflet';
-import L from 'leaflet';
-import 'leaflet-velocity/dist/leaflet-velocity.css';
-import 'leaflet-velocity/dist/leaflet-velocity.js';
-import windyData from './windy.json';
+// Declare the windyInit function and L for Leaflet to avoid TypeScript errors
+declare global {
+  interface Window {
+    windyInit: (options: any, callback: (windyAPI: any) => void) => void;
+    L: any;
+  }
+}
 
-const Windy = () => {
-  const map = useMap();
-
+const Windy: React.FC = () => {
   useEffect(() => {
-    if (!map) return;
+    const options = {
+      // Required: API key
+      key: 'a5489zQmHcCEvPtE5NZ7WPnVN5WDGjMg', 
 
-    let velocityLayer: any = null;
-    let timer: ReturnType<typeof setTimeout> | null = null;
+      // Put additional console output
+      verbose: true,
 
-    map.whenReady(() => {
-      timer = setTimeout(() => {
-        const mapSize = map.getSize();
-        if (mapSize.x > 0 && mapSize.y > 0) {
-          velocityLayer = (L as any).velocityLayer({
-            displayValues: true,
-            displayOptions: {
-              velocityType: 'Wind',
-              position: 'bottomleft',
-              emptyString: 'No wind data',
-              angleConvention: 'bearing',
-              speedUnit: 'm/s',
-            },
-            data: windyData,
-            minVelocity: 0,
-            maxVelocity: 10,
-            velocityScale: 0.05,
-            colorScale: [
-              'rgb(36,104, 181)', 'rgb(60,157, 194)', 'rgb(128,205,193)',
-              'rgb(151,218,168)', 'rgb(198,231,181)', 'rgb(238,247,217)',
-              'rgb(255,238,159)', 'rgb(252,217,125)', 'rgb(255,182,100)',
-              'rgb(252,150,75)', 'rgb(250,112,52)', 'rgb(245,64,32)',
-              'rgb(237,45,28)', 'rgb(220,24,32)', 'rgb(180,0,35)',
-            ],
-          });
-          velocityLayer.addTo(map);
-        }
-      }, 0);
-    });
-
-    return () => {
-      if (timer) {
-        clearTimeout(timer);
-      }
-      if (velocityLayer) {
-        velocityLayer.removeFrom(map);
-      }
+      // Optional: Initial state of the map
+      lat: 50.4,
+      lon: 14.3,
+      zoom: 5,
     };
-  }, [map]);
 
-  return null;
+    // Initialize Windy API
+    window.windyInit(options, windyAPI => {
+      // windyAPI is ready, and contain 'map', 'store',
+      // 'picker' and other usefull stuff
+
+      const { map } = windyAPI;
+      // .map is instance of Leaflet map
+
+      window.L.popup()
+        .setLatLng([50.4, 14.3])
+        .setContent('Hello World')
+        .openOn(map);
+    });
+  }, []); // Empty dependency array to run only once
+
+  return <div id="windy"></div>;
 };
 
 export default Windy;
